@@ -22,7 +22,7 @@ Record_ID=$(curl -s -X GET "$API/zones/$Zone_ID/dns_records?type=A&name=$A_Recor
 	$H_Email $H_Auth_Key $H_Content \
 	| grep '"id"' | sed -e s/'"id": "'//g | sed -e s/'",'//g | sed s/' '//g)
 
-(curl -X PUT "$API/zones/$Zone_ID/dns_records/$Record_ID" \
+PUT=(curl -X PUT "$API/zones/$Zone_ID/dns_records/$Record_ID" \
 	$H_Email $H_Auth_Key $H_Content \
 	--data '{"type":"A","name":"'"$A_Record"'","content":"'"$IP"'"}')
 
