@@ -14,16 +14,13 @@ H_Content="-HContent-Type:application/json"
 
 Account_ID=$(curl -s -X GET "$API/accounts" $H_Email $H_Auth_Key $H_Content \
 	| cut -d',' -f1 | sed -e s/'"id":"'/'`'/g | sed -e s/'"'//g | cut -d'`' -f2)
-echo $Account_ID
 
 Zone_ID=$(curl -s -X GET "$API/zones?name=$Domain" $H_Email $H_Auth_Key $H_Content \
 	| cut -d',' -f1 | sed -e s/'"'//g | cut -d':' -f3)
-echo $Zone_ID
 
 Record_ID=$(curl -s -X GET "$API/zones/$Zone_ID/dns_records?type=A&name=$A_Record" \
 	$H_Email $H_Auth_Key $H_Content \
 	| grep '"id"' | sed -e s/'"id": "'//g | sed -e s/'",'//g | sed s/' '//g)
-echo $Record_ID
 
 (curl -X PUT "$API/zones/$Zone_ID/dns_records/$Record_ID" \
 	$H_Email $H_Auth_Key $H_Content \
