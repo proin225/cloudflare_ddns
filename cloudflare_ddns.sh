@@ -7,7 +7,7 @@ Domain=example.com
 # A Record
 A_Record=a.example.com
 
-echo "========== Cloudflare DDNS SCRIPT V 1.0.0 =========="
+echo "========== Cloudflare DDNS SCRIPT V 1.0.1 =========="
 
 IP=$(curl -s "https://ipv4.icanhazip.com/") # Get IP Address
 API="https://api.cloudflare.com/client/v4" # Cloudflare API URL
@@ -29,7 +29,7 @@ Zone_ID=$(curl -s -X GET "$API/zones?name=$Domain" $H_Email $H_Auth_Key $H_Conte
 # Get Record ID
 Record_ID=$(curl -s -X GET "$API/zones/$Zone_ID/dns_records?type=A&name=$A_Record" \
 	$H_Email $H_Auth_Key $H_Content \
-	| grep '"id"' | sed -e s/'"id": "'//g | sed -e s/'",'//g | sed s/' '//g)
+	| cut -d ',' -f1 | cut -d ':' -f3 | sed -e s/'"'//g)
 
 # Cloudflare API Query
 PUT=$(curl -s -X PUT "$API/zones/$Zone_ID/dns_records/$Record_ID" \
